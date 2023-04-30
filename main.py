@@ -1,6 +1,7 @@
 import yaml
 from pymongo import MongoClient
-
+import os
+import shutil
 # load config file
 with open("config.yml", "r") as ymlfile:
     cfg = yaml.full_load(ymlfile)
@@ -19,3 +20,11 @@ db = client[dbName]
 first_time = False
 if dbName not in client.list_database_names():
     first_time = True
+
+# Check ./tmp directory exists
+tmp_dir = f"./tmp/"
+if os.path.exists(tmp_dir):
+    shutil.rmtree(tmp_dir)
+    os.mkdir(tmp_dir)
+else:
+    os.mkdir(tmp_dir)
