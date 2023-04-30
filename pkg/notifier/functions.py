@@ -9,8 +9,27 @@ def get_platform_profile(platform_name):
         profile_url = "https://avatars.githubusercontent.com/u/16663829?s=280&v=4"
     return profile_url
 
+
 def shorten_string(string):
     if len(string) > 30:
         return string[:30] + "...\n"
     else:
         return string
+
+
+def split_text(huge_text, max_chunk_size=1000):
+    sentences = huge_text.split('\n')
+    chunks = []
+    current_chunk = ""
+
+    for sentence in sentences:
+        if len(current_chunk) + len(sentence) + 1 <= max_chunk_size:
+            current_chunk += (sentence + '\n')
+        else:
+            chunks.append(current_chunk.strip())
+            current_chunk = sentence + '\n'
+
+    if current_chunk:
+        chunks.append(current_chunk.strip())
+
+    return chunks
