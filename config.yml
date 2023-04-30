@@ -1,0 +1,41 @@
+discordWebhook:
+  programs_watcher: <YOUR DISCORD WEBHOOK>
+mongoDB:
+  uri: mongodb://localhost:27017/
+  database: programs_watcher
+platforms:
+  - name: bugcrowd
+    url: https://raw.githubusercontent.com/Osb0rn3/bugbounty-targets/main/programs/bugcrowd.json
+    notifications:
+      new_program: true
+      new_inscope: true
+      removed_inscope: true
+      new_out_of_scope: true
+      removed_out_of_scope: true
+      new_type: true
+      new_bounty_table: true
+  - name: hackerone
+    url: https://raw.githubusercontent.com/Osb0rn3/bugbounty-targets/main/programs/hackerone.json
+    notifications:
+      new_program: true
+      new_scope: true
+      removed_scope: true
+      changed_scope: true
+      new_type: true
+  - name: intigriti
+    url: https://raw.githubusercontent.com/Osb0rn3/bugbounty-targets/main/programs/intigriti.json
+    notifications:
+      new_program: true
+      new_scope: true
+      removed_scope: true
+      changed_scope: true
+      new_type: true
+      new_bounty_table: true
+  - name: yeswehack
+    url: https://raw.githubusercontent.com/Osb0rn3/bugbounty-targets/main/programs/yeswehack.json
+    notifications:
+      new_program: true
+      new_inscope: true
+      removed_inscope: true
+      new_type: true
+      new_bounty_table: true
