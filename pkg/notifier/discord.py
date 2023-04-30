@@ -1,6 +1,21 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
 
+def add_field(embed, data, message, diff=False):
+    texts = split_text(data)
+    isFirstTime = 0
+    type = ""
+    if diff:
+        type = "diff\n"
+    for text in texts:
+        if isFirstTime == 0:
+            embed.add_embed_field(
+                name=message, value=f"```{type}{text}```", inline=False)
+            isFirstTime = 1
+        else:
+            embed.add_embed_field(
+                name=" ", value=f"```{type}{text}```", inline=False)
+
 def changed_program_message(data):
     embed = DiscordEmbed(title=f"{data['programName']}",
                          description=f"** {data['programName']} ** has changed!\n** Program type: ** {data['programType']}\n\n** Program page: ** [Click here]({data['programURL']})", color=data['color'])
