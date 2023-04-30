@@ -28,3 +28,8 @@ if os.path.exists(tmp_dir):
     os.mkdir(tmp_dir)
 else:
     os.mkdir(tmp_dir)
+
+
+# Clean up resources and remove tmp_dir
+client.close()
+shutil.rmtree(tmp_dir)
