@@ -1,4 +1,5 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
+from pkg.notifier.functions import generate_diff, split_text, get_platform_profile, shorten_string
 
 
 def add_field(embed, data, message, diff=False):
@@ -15,6 +16,7 @@ def add_field(embed, data, message, diff=False):
         else:
             embed.add_embed_field(
                 name=" ", value=f"```{type}{text}```", inline=False)
+
 
 def changed_program_message(data):
     embed = DiscordEmbed(title=f"{data['programName']}",
@@ -67,6 +69,7 @@ def changed_program_message(data):
                           "Following out of scope removed:")
     return embed
 
+
 def new_program_message(data):
     embed = DiscordEmbed(title=f"{data['programName']}",
                          description=f"** New program ** named** {data['programName']} ** added to platform!\n** Program type: ** {data['programType']}\n\n** Program page: ** [Click here]({data['programURL']})", color=data['color'])
@@ -96,6 +99,7 @@ def new_program_message(data):
                 newOutOfScope = '\n'.join(data['newOutOfScope'])
                 add_field(embed, newOutOfScope, "Out of scope:")
     return embed
+
 
 def send_notification(data, webhook_url):
 
