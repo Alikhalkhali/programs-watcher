@@ -1,3 +1,6 @@
+import difflib
+
+
 def get_platform_profile(platform_name):
     if platform_name == "HackerOne":
         profile_url = "https://profile-photos.hackerone-user-content.com/variants/000/000/013/fa942b9b1cbf4faf37482bf68458e1195aab9c02_original.png/e60fe2d979b041d2254f8a36a3d2d7a24d7c4a8ad33ea024d13fc56668c7c4f6"
@@ -33,3 +36,16 @@ def split_text(huge_text, max_chunk_size=1000):
         chunks.append(current_chunk.strip())
 
     return chunks
+
+
+def generate_diff(old_str, new_str):
+    diff = difflib.ndiff(old_str.splitlines(), new_str.splitlines())
+    result = []
+    for line in diff:
+        if line.startswith('+'):
+            result.append(f'+{line[1:]}')
+        elif line.startswith('-'):
+            result.append(f'-{line[1:]}')
+        elif line.startswith(' '):
+            result.append(line)
+    return '\n'.join(result)
