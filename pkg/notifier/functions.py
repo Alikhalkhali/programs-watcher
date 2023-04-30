@@ -8,3 +8,9 @@ def get_platform_profile(platform_name):
     elif platform_name == "YesWeHack":
         profile_url = "https://avatars.githubusercontent.com/u/16663829?s=280&v=4"
     return profile_url
+
+def shorten_string(string):
+    if len(string) > 30:
+        return string[:30] + "...\n"
+    else:
+        return string
