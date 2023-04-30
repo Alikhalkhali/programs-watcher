@@ -1,6 +1,57 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
 
+def changed_program_message(data):
+    embed = DiscordEmbed(title=f"{data['programName']}",
+                         description=f"** {data['programName']} ** has changed!\n** Program type: ** {data['programType']}\n\n** Program page: ** [Click here]({data['programURL']})", color=data['color'])
+    embed.set_thumbnail(url=data['logo'])
+    embed.set_footer(text='Powered by Ali Khalkhali',
+                     icon_url='https://cdn.discordapp.com/avatars/941457826662985808/488f3bcab0de041de57860b4e05e2e9f.webp')
+    if data["platformName"] in ["HackerOne", "Intigriti"]:
+        if data["newProgramType"]:
+            embed.add_embed_field(name="Program type changed:",
+                                  value=f"```changed to {data['newProgramType']}```", inline=False)
+        if data["platformName"] == "Intigriti":
+            if data['newReward']:
+                embed.add_embed_field(
+                    name="Bounty Table changed:", value=f"```{data['newReward']['min']} -- {data['newReward']['max']}```", inline=False)
+        if data["newScope"]:
+            scope = '\n'.join(data['newScope'])
+            add_field(embed, scope, "Following scope added:")
+        if data["removedScope"]:
+            removedScope = '\n'.join(data['removedScope'])
+            add_field(embed, removedScope, "Following Scope removed:")
+        if data["changedScope"]:
+            for scope in data["changedScope"]:
+                old = scope["old"]
+                new = scope["new"]
+                diff = generate_diff(old, new)
+                add_field(embed, diff, "Following scope changed:", True)
+    if data["platformName"] in ["Bugcrowd", "YesWeHack"]:
+        if data['newType']:
+            embed.add_embed_field(
+                name="Program Type changed", value=f"```New Type: {data['newType']}```", inline=False)
+        if data['reward']:
+            embed.add_embed_field(name="Bounty Table changed:",
+                                  value=f"```{data['reward']['min']} -- {data['reward']['max']}```", inline=False)
+        if data['newInScope']:
+            inscope = '\n'.join(data['newInScope'])
+            add_field(embed, inscope, "Following inScope added:")
+        if data['removeInScope']:
+            removeInScope = '\n'.join(data['removeInScope'])
+            add_field(embed, removeInScope, "Following Inscope removed:")
+
+        if data["platformName"] == "Bugcrowd":
+            if data['newOutOfScope']:
+                newOutOfScope = '\n'.join(data['newOutOfScope'])
+                add_field(embed, newOutOfScope,
+                          "Following out of scope added:")
+            if data['removeOutOfScope']:
+                removeOutOfScope = '\n'.join(data['removeOutOfScope'])
+                add_field(embed, removeOutOfScope,
+                          "Following out of scope removed:")
+    return embed
+
 def new_program_message(data):
     embed = DiscordEmbed(title=f"{data['programName']}",
                          description=f"** New program ** named** {data['programName']} ** added to platform!\n** Program type: ** {data['programType']}\n\n** Program page: ** [Click here]({data['programURL']})", color=data['color'])
@@ -30,8 +81,6 @@ def new_program_message(data):
                 newOutOfScope = '\n'.join(data['newOutOfScope'])
                 add_field(embed, newOutOfScope, "Out of scope:")
     return embed
-
-
 
 def send_notification(data, webhook_url):
 
