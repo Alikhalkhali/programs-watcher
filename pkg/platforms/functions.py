@@ -21,3 +21,8 @@ def find_program(db, platformName, programKey):
 def remove_elements(array1, array2):
     for element in array2:
         array1.remove(element)
+
+
+def save_data(db, platformName, programKey, dataJson):
+    db[platformName].update_one({'programKey': programKey}, {
+        '$set': dataJson}, upsert=True)
