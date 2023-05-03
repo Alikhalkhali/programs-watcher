@@ -11,3 +11,8 @@ def generate_program_key(programName, programURL):
     program_key = md5(
         f"{programName}|{programURL}".encode('utf-8')).hexdigest()
     return program_key
+
+
+def find_program(db, platformName, programKey):
+    data = db[platformName].find_one({'programKey': programKey})
+    return data
