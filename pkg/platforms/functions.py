@@ -16,3 +16,8 @@ def generate_program_key(programName, programURL):
 def find_program(db, platformName, programKey):
     data = db[platformName].find_one({'programKey': programKey})
     return data
+
+
+def remove_elements(array1, array2):
+    for element in array2:
+        array1.remove(element)
