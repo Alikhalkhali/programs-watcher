@@ -1,7 +1,7 @@
 discordWebhook:
   programs_watcher: <YOUR DISCORD WEBHOOK>
 mongoDB:
-  uri: mongodb://localhost:27017/
+  uri: mongodb://db:27017/
   database: programs_watcher
 platforms:
   - name: bugcrowd
