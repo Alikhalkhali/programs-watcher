@@ -1,0 +1,10 @@
+services:
+  app:
+    build: .
+  db:
+    image: mongo:4.0-xenial
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
