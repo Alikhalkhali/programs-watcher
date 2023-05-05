@@ -5,6 +5,7 @@ from pkg.notifier.discord import send_notification
 
 # checking yeswehack
 def check_yeswehack(tmp_dir, mUrl, first_time, db, config):
+    json_programs_key = []
     notifications = config['notifications']
     get_resource(tmp_dir, config['url'], "yeswehack")
     yeswehack = open(f"{tmp_dir}yeswehack.json")
@@ -14,11 +15,11 @@ def check_yeswehack(tmp_dir, mUrl, first_time, db, config):
         logo = program['thumbnail']['url']
         programURL = f"https://yeswehack.com/programs/{program['slug']}"
         data = {"programName": programName, "programType": "", "programURL": programURL,
-                "logo": logo, "platformName": "YesWeHack", "isNewProgram": False, "color": 16270147}
+                "logo": logo, "platformName": "YesWeHack","isRemoved": False, "isNewProgram": False, "color": 16270147}
         dataJson = {"programName": programName,
                     "programURL": programURL, "programType": "", "inScope": [], "reward": {}}
         programKey = generate_program_key(programName, programURL)
-
+        json_programs_key.append(programKey)
         watcherData = find_program(db, 'yeswehack', programKey)
 
         if watcherData is None:
@@ -85,3 +86,19 @@ def check_yeswehack(tmp_dir, mUrl, first_time, db, config):
                 send_notification(data, mUrl)
             elif not first_time and send_notifi and not data['isNewProgram']:
                 send_notification(data, mUrl)
+
+    db_programs_key = db['yeswehack'].distinct("programKey")
+    removed_programs_key = set(db_programs_key) - set(json_programs_key)
+    for program_key in removed_programs_key:
+        program = find_program(db,'yeswehack', program_key)
+        data = {
+            "color": 14584064,
+            "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwToiI8YA0eLclDkd-vJ0xXs7bun5LdHfTrgJucvI&s",
+            "platformName": "YesWeHack",
+            "isRemoved": True, 
+            "programName": program["programName"],
+            "programType": program["programType"]
+        }
+        if notifications['removed_program'] and not first_time:
+            send_notification(data,mUrl)
+        db['yeswehack'].delete_many({"programKey": program_key})        

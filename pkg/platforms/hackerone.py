@@ -5,6 +5,7 @@ from pkg.notifier.discord import send_notification
 
 # checking hackerone
 def check_hackerone(tmp_dir, mUrl, first_time, db, config):
+    json_programs_key = []
     notifications = config['notifications']
     get_resource(tmp_dir, config['url'], "hackerone")
     hackeroneFile = open(f"{tmp_dir}hackerone.json")
@@ -18,10 +19,11 @@ def check_hackerone(tmp_dir, mUrl, first_time, db, config):
         programURL = "https://hackerone.com/" + \
             program["attributes"]["handle"]+"?type=team"
         data = {"programName": programName, "programType": "", "programURL": programURL,
-                "logo": logo, "platformName": "HackerOne", "isNewProgram": False, "color": 16777215}
+                "logo": logo, "platformName": "HackerOne", "isRemoved": False,"isNewProgram": False, "color": 16777215}
         dataJson = {"programName": programName,
                     "programURL": programURL, "programType": "", "scope": {}}
         programKey = generate_program_key(programName, programURL)
+        json_programs_key.append(programKey)
         watcherData = find_program(db, 'hackerone', programKey)
 
         if watcherData is None:
@@ -103,3 +105,19 @@ def check_hackerone(tmp_dir, mUrl, first_time, db, config):
                 send_notification(data, mUrl)
             elif not first_time and send_notifi and not data['isNewProgram']:
                 send_notification(data, mUrl)
+
+    db_programs_key = db['hackerone'].distinct("programKey")
+    removed_programs_key = set(db_programs_key) - set(json_programs_key)
+    for program_key in removed_programs_key:
+        program = find_program(db,'hackerone', program_key)
+        data = {
+            "color": 14584064,
+            "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwToiI8YA0eLclDkd-vJ0xXs7bun5LdHfTrgJucvI&s",
+            "platformName": "HackerOne",
+            "isRemoved": True, 
+            "programName": program["programName"],
+            "programType": program["programType"]
+        }
+        if notifications['removed_program'] and not first_time:
+            send_notification(data,mUrl)
+        db['hackerone'].delete_many({"programKey": program_key})        

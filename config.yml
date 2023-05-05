@@ -8,6 +8,7 @@ platforms:
     url: https://raw.githubusercontent.com/Osb0rn3/bugbounty-targets/main/programs/bugcrowd.json
     notifications:
       new_program: true
+      removed_program: true
       new_inscope: true
       removed_inscope: true
       new_out_of_scope: true
@@ -18,6 +19,7 @@ platforms:
     url: https://raw.githubusercontent.com/Osb0rn3/bugbounty-targets/main/programs/hackerone.json
     notifications:
       new_program: true
+      removed_program: true
       new_scope: true
       removed_scope: true
       changed_scope: true
@@ -26,6 +28,7 @@ platforms:
     url: https://raw.githubusercontent.com/Osb0rn3/bugbounty-targets/main/programs/intigriti.json
     notifications:
       new_program: true
+      removed_program: true
       new_scope: true
       removed_scope: true
       changed_scope: true
@@ -35,6 +38,7 @@ platforms:
     url: https://raw.githubusercontent.com/Osb0rn3/bugbounty-targets/main/programs/yeswehack.json
     notifications:
       new_program: true
+      removed_program: true
       new_inscope: true
       removed_inscope: true
       new_type: true

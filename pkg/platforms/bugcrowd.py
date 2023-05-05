@@ -5,6 +5,7 @@ from pkg.notifier.discord import send_notification
 
 # checking bugcrowd
 def check_bugcrowd(tmp_dir, mUrl, first_time, db, config):
+    json_programs_key = []
     notifications = config['notifications']
     get_resource(tmp_dir, config['url'], "bugcrowd")
     bugcrowdFile = open(f"{tmp_dir}bugcrowd.json")
@@ -14,12 +15,12 @@ def check_bugcrowd(tmp_dir, mUrl, first_time, db, config):
         programName = program["name"]
         programURL = "https://bugcrowd.com"+program["program_url"]
         logo = program["logo"]
-        data = {"programName": programName, "reward": {}, "newType": "", "newInScope": [], "removeInScope": [], "newOutOfScope": [], "removeOutOfScope": [], "programURL": programURL,
+        data = {"programName": programName, "reward": {},"isRemoved": False, "newType": "", "newInScope": [], "removeInScope": [], "newOutOfScope": [], "removeOutOfScope": [], "programURL": programURL,
                 "logo": logo, "platformName": "Bugcrowd", "isNewProgram": False, "color": 14584064}
         dataJson = {"programName": programName, "programURL": programURL, "programType": "",
                     "outOfScope": [], "inScope": [], "reward": {}}
         programKey = generate_program_key(programName, programURL)
-
+        json_programs_key.append(programKey)
         watcherData = find_program(db, 'bugcrowd', programKey)
         if watcherData is None:
             data["isNewProgram"] = True
@@ -103,3 +104,19 @@ def check_bugcrowd(tmp_dir, mUrl, first_time, db, config):
                 send_notification(data, mUrl)
             elif not first_time and send_notifi and not data['isNewProgram']:
                 send_notification(data, mUrl)
+    
+    db_programs_key = db['bugcrowd'].distinct("programKey")
+    removed_programs_key = set(db_programs_key) - set(json_programs_key)
+    for program_key in removed_programs_key:
+        program = find_program(db,'bugcrowd', program_key)
+        data = {
+            "color": 14584064,
+            "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwToiI8YA0eLclDkd-vJ0xXs7bun5LdHfTrgJucvI&s",
+            "platformName": "Bugcrowd",
+            "isRemoved": True, 
+            "programName": program["programName"],
+            "programType": program["programType"]
+        }
+        if notifications['removed_program'] and not first_time:
+            send_notification(data,mUrl)
+        db['bugcrowd'].delete_many({"programKey": program_key})        

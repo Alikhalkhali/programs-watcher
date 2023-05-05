@@ -39,6 +39,7 @@ This section contains a list of bug bounty platforms to monitor. For each platfo
 To receive notifications for a specific type of change, set the corresponding notification option to `true`. The available notification options are:
 
 - `new_program`: Notify when a new program is added.
+- `removed_program`: Notify when a program is removed.
 - `new_inscope`: Notify when a new scope is added.
 - `removed_inscope`: Notify when a scope is removed.
 - `new_out_of_scope`: Notify when a new out-of-scope item is added.
