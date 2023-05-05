@@ -10,7 +10,8 @@ To install Programs Watcher, follow these steps:
 
 1. Clone the repository and navigate to the repository directory using your preferred method.
 2. In the `config.yml` file, replace `<YOUR DISCORD WEBHOOK>` with your Discord webhook URL.
-3. Run `docker-compose up -d`.
+3. Run:
+ ```docker-compose up -d```.
 
 ## Configuring Programs Watcher
 
