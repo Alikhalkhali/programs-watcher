@@ -34,7 +34,7 @@ docker-compose up -d
 
 The Programs Watcher program uses a configuration file named `config.yml` to store information about the bug bounty platforms to monitor and the notification options to use.
 
-### Discord Webhook
+## Discord Webhook
 
 To use the Discord webhook, replace `<YOUR DISCORD WEBHOOK>` with the actual URL of your webhook in the following line:
 
@@ -43,16 +43,16 @@ discordWebhook:
 programs_watcher: <YOUR DISCORD WEBHOOK>
 ```
 
-### MongoDB
+## MongoDB
 
 - `uri`: This is the URI of the MongoDB database that the application will use to store data.
 - `database`: This is the name of the database that the application will use to store data.
 
-### Platforms
+## Platforms
 
 This section contains a list of bug bounty platforms to monitor. For each platform, provide the name, URL, and a set of notification options. The notification options specify which types of changes should trigger notifications.
 
-#### Notifications
+### Notifications
 
 To receive notifications for a specific type of change, set the corresponding notification option to `true`. The available notification options are:
 
@@ -69,15 +69,15 @@ To receive notifications for a specific type of change, set the corresponding no
 
 Fill in the necessary information for each platform that you want to monitor.
 
-## Contributing
+# Contributing
 
 If you would like to contribute to this project, please fork the repository and submit a pull request.
 
-## License
+# License
 
 This project is licensed under the MIT license. See the LICENSE file for details.
 
-## Contact
+# Contact
 
 If you have any questions or concerns, please feel free to contact me directly on social media:
 
