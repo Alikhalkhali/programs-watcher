@@ -1,21 +1,36 @@
+<h2 align="center" >
+  Table of Contents 
+</h2>
+<p align="center">
+  <a href="#Installation">Installation</a> •
+  <a href="#Configuring-Programs-Watcher">Configuring Programs Watcher</a> •
+  <a href="#Contributing">Contributing</a> •
+  <a href="#License">License</a> •
+   <a href="#Contact">Contact</a> •
+  </p>
+  
 # Programs Watcher
-
-## Description
-
 Programs Watcher is a Python program that monitors and notifies you of new updates from various bug bounty platforms. It uses MongoDB for data storage and Discord webhooks for notifications.
 
-## Installation
+# Installation
 
 To install Programs Watcher, follow these steps:
 
-1. Clone the repository and navigate to the repository directory using your preferred method.
-2. In the `config.yml` file, replace `<YOUR DISCORD WEBHOOK>` with your Discord webhook URL.
-3. Run:
+1. Clone the repository to your local machine:
+```bash
+git clone https://github.com/Alikhalkhali/programs-watcher.git
+```
+2. Change directory to the project folder:
+```bash
+cd programs-watcher
+```
+3. In the `config.yml` file, replace `<YOUR DISCORD WEBHOOK>` with your Discord webhook URL.
+4. Run:
  ```bash
 docker-compose up -d
 ```
 
-## Configuring Programs Watcher
+# Configuring Programs Watcher
 
 The Programs Watcher program uses a configuration file named `config.yml` to store information about the bug bounty platforms to monitor and the notification options to use.
 
