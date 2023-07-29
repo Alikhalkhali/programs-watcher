@@ -1,6 +1,6 @@
 import json
-from pkg.platforms.functions import find_program, generate_program_key, get_resource, remove_elements, save_data
-from pkg.notifier.discord import send_notification
+from modules.platforms.functions import find_program, generate_program_key, get_resource, remove_elements, save_data
+from modules.notifier.discord import send_notification
 
 
 # checking bugcrowd

@@ -1,5 +1,5 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
-from pkg.notifier.functions import generate_diff, split_text, get_platform_profile, shorten_string
+from modules.notifier.functions import generate_diff, split_text, get_platform_profile, shorten_string
 
 
 def add_field(embed, data, message, diff=False):
@@ -123,3 +123,16 @@ def send_notification(data, webhook_url):
     if response.status_code != 200:
         print(data["programName"])
         print("Error sending message:", response.content)
+
+def send_startup_message(webhook_url):
+    webhook = DiscordWebhook(
+        url=webhook_url, username="Programs Watcher", avatar_url="https://t3.ftcdn.net/jpg/00/91/64/62/360_F_91646202_b3K6ELfgM2E8QIwuNTlzco7K1r3mOJvp.jpg")
+    embed = DiscordEmbed(title=f"🎉 Successful Start of Programs Watcher 🎉",
+                         description= "Hi, welcome to ** Programs Watcher **! 🎉\nThe program has started successfully and is now waiting for a change. 🗼✨\n** Github page: ** https://github.com/Alikhalkhali/programs-watcher", color="23ff1f")
+    embed.set_footer(text='Powered by Ali Khalkhali',
+                     icon_url='https://cdn.discordapp.com/avatars/941457826662985808/488f3bcab0de041de57860b4e05e2e9f.webp')
+    webhook.add_embed(embed)
+    response = webhook.execute()
+
+    if response.status_code != 200:
+       print("There was an error sending the Discord message")
