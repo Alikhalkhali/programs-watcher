@@ -117,7 +117,7 @@ def check_intigriti(tmp_dir, mUrl, first_time, db, config):
     for program_key in removed_programs_key:
         program = find_program(db,'intigriti', program_key)
         data = {
-            "color": 14584064,
+            "color": 10858237,
             "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwToiI8YA0eLclDkd-vJ0xXs7bun5LdHfTrgJucvI&s",
             "platformName": "Intigriti",
             "isRemoved": True, 

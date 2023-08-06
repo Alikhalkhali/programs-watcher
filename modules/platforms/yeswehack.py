@@ -93,7 +93,7 @@ def check_yeswehack(tmp_dir, mUrl, first_time, db, config):
     for program_key in removed_programs_key:
         program = find_program(db,'yeswehack', program_key)
         data = {
-            "color": 14584064,
+            "color": 16270147,
             "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwToiI8YA0eLclDkd-vJ0xXs7bun5LdHfTrgJucvI&s",
             "platformName": "YesWeHack",
             "isRemoved": True, 
