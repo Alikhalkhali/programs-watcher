@@ -1,5 +1,5 @@
 import json
-from modules.platforms.functions import find_program, generate_program_key, get_resource, save_data
+from modules.platforms.functions import find_program, generate_program_key, get_resource, save_data, check_program_type
 from modules.notifier.discord import send_notification
 
 
@@ -101,10 +101,11 @@ def check_hackerone(tmp_dir, mUrl, first_time, db, config):
 
         if hasChanged:
             save_data(db, "hackerone", programKey, watcherData)
-            if not first_time and data['isNewProgram'] and notifications['new_program']:
-                send_notification(data, mUrl)
-            elif not first_time and send_notifi and not data['isNewProgram']:
-                send_notification(data, mUrl)
+            if check_program_type(data,watcherData, notifications):
+                if not first_time and data['isNewProgram'] and notifications['new_program']:
+                    send_notification(data, mUrl)
+                elif not first_time and send_notifi and not data['isNewProgram']:
+                    send_notification(data, mUrl)
 
     db_programs_key = db['hackerone'].distinct("programKey")
     removed_programs_key = set(db_programs_key) - set(json_programs_key)

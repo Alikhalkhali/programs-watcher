@@ -26,3 +26,19 @@ def remove_elements(array1, array2):
 def save_data(db, platformName, programKey, dataJson):
     db[platformName].update_one({'programKey': programKey}, {
         '$set': dataJson}, upsert=True)
+
+def check_program_type(data,watcherData,notifications):
+    pt_notify_status = False
+    if data['isNewProgram']:
+        
+        if data['programType'] == "rdp" and notifications['watch_rdp']:
+            pt_notify_status = True
+        elif data['programType'] == "vdp" and notifications["watch_vdp"]: 
+            pt_notify_status = True
+    else:
+        if watcherData['programType'] == "rdp" and notifications['watch_rdp']:
+            pt_notify_status = True
+        elif watcherData['programType'] == "vdp" and notifications["watch_vdp"]: 
+            pt_notify_status = True   
+    return pt_notify_status  
+    

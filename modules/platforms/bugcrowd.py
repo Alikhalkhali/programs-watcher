@@ -1,5 +1,5 @@
 import json
-from modules.platforms.functions import find_program, generate_program_key, get_resource, remove_elements, save_data
+from modules.platforms.functions import find_program, generate_program_key, get_resource, remove_elements, save_data, check_program_type
 from modules.notifier.discord import send_notification
 
 
@@ -34,18 +34,18 @@ def check_bugcrowd(tmp_dir, mUrl, first_time, db, config):
             else:
                 for item in target["targets"]:
                     dataJson["inScope"].append((item["name"]))
-        if "min_rewards" in program:
+
+            if program["min_rewards"] > 0:
+                dataJson["programType"] = "rdp"
+                data["programType"] = "rdp"
+            else:
+                dataJson["programType"] = "vdp"
+                data["programType"] = "vdp"
             bounty = {
                 "min": program["min_rewards"],
                 "max": program["max_rewards"]
             }
             dataJson["reward"] = bounty
-            dataJson["programType"] = "rdp"
-            data["programType"] = "rdp"
-        else:
-            dataJson["programType"] = "vdp"
-            data["programType"] = "vdp"
-            bounty = {}
         newInScope = [i for i in dataJson["inScope"]
                       if i not in watcherData["inScope"]]
         removeInScope = [i for i in watcherData["inScope"]
@@ -100,11 +100,12 @@ def check_bugcrowd(tmp_dir, mUrl, first_time, db, config):
                 send_notifi = True
         if hasChanged:
             save_data(db, "bugcrowd", programKey, watcherData)
-            if not first_time and data['isNewProgram'] and notifications['new_program']:
-                send_notification(data, mUrl)
-            elif not first_time and send_notifi and not data['isNewProgram']:
-                send_notification(data, mUrl)
-    
+            if check_program_type(data,watcherData,notifications):
+                if not first_time and data['isNewProgram'] and notifications['new_program']:
+                    send_notification(data, mUrl)
+                elif not first_time and send_notifi and not data['isNewProgram']:
+                    send_notification(data, mUrl)
+        
     db_programs_key = db['bugcrowd'].distinct("programKey")
     removed_programs_key = set(db_programs_key) - set(json_programs_key)
     for program_key in removed_programs_key:

@@ -56,6 +56,8 @@ This section contains a list of bug bounty platforms to monitor. For each platfo
 
 To receive notifications for a specific type of change, set the corresponding notification option to `true`. The available notification options are:
 
+- `watch_rdp`: Notify when the RDP program is added, modified, or deleted. (true: send notifications, false: do not send notifications)
+- `watch_vdp`: Notify when the VDP program is added, modified, or deleted. (true: send notifications, false: do not send notifications)
 - `new_program`: Notify when a new program is added.
 - `removed_program`: Notify when a program is removed.
 - `new_inscope`: Notify when a new scope is added.
