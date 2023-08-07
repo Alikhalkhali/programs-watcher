@@ -67,6 +67,7 @@ def changed_program_message(data):
                 removeOutOfScope = '\n'.join(data['removeOutOfScope'])
                 add_field(embed, removeOutOfScope,
                           "Following out of scope removed:")
+    embed.add_embed_field(name=" ", value= "[Click here to Buy me a coffee ☕](https://www.buymeacoffee.com/alikhalkhali)", inline=False)
     return embed
 
 
@@ -97,6 +98,8 @@ def new_program_message(data):
             if data['newOutOfScope']:
                 newOutOfScope = '\n'.join(data['newOutOfScope'])
                 add_field(embed, newOutOfScope, "Out of scope:")
+
+    embed.add_embed_field(name=" ", value= "[Click here to Buy me a coffee ☕](https://www.buymeacoffee.com/alikhalkhali)", inline=False)
     return embed
 
 def removed_program_message(data):
@@ -105,6 +108,8 @@ def removed_program_message(data):
     embed.set_thumbnail(url=data['logo'])
     embed.set_footer(text='Powered by Ali Khalkhali',
                      icon_url='https://cdn.discordapp.com/avatars/941457826662985808/488f3bcab0de041de57860b4e05e2e9f.webp')
+
+    embed.add_embed_field(name=" ", value= "[Click here to Buy me a coffee ☕](https://www.buymeacoffee.com/alikhalkhali)", inline=False)
     return embed
 
 def send_notification(data, webhook_url):
