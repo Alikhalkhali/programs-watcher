@@ -52,12 +52,42 @@ programs_watcher: <YOUR DISCORD WEBHOOK>
 
 This section contains a list of bug bounty platforms to monitor. For each platform, provide the name, URL, and a set of notification options. The notification options specify which types of changes should trigger notifications.
 
+### Monitor:
+
+Specify the monitoring options for the platform.
+
+- `rdp`: Set to true if you want to monitor RDP programs.
+- `vdp`: Set to true if you want to monitor VDP programs.
+- `specific_programs`:  List the specific program URLs you want to monitor. Note that it only monitors public programs. For example:
+  - bugcrowd:
+    ```yml
+      specific_programs: 
+        - https://bugcrowd.com/rarible-ogmbb
+        - https://bugcrowd.com/smartthings
+    ```
+  - hackerone:
+    ```yml
+      specific_programs: 
+        - https://hackerone.com/phabricator?type=team
+        - https://hackerone.com/yahoo?type=team
+    ```
+  - intigriti:
+    ```yml
+      specific_programs: 
+        - https://app.intigriti.com/programs/portofantwerp/nxtport
+        - https://app.intigriti.com/programs/intergamma/intergamma
+    ```
+  - yeswehack:
+    ```yml
+      specific_programs: 
+        - https://yeswehack.com/programs/swiss-post-evoting
+        - https://yeswehack.com/programs/dana-bug-bounty-programd
+    ```
+
 ### Notifications
 
 To receive notifications for a specific type of change, set the corresponding notification option to `true`. The available notification options are:
 
-- `watch_rdp`: Notify when the RDP program is added, modified, or deleted. (true: send notifications, false: do not send notifications)
-- `watch_vdp`: Notify when the VDP program is added, modified, or deleted. (true: send notifications, false: do not send notifications)
 - `new_program`: Notify when a new program is added.
 - `removed_program`: Notify when a program is removed.
 - `new_inscope`: Notify when a new scope is added.
