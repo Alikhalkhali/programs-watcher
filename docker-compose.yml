@@ -3,6 +3,8 @@ version: "3"
 services:
   app:
     build: .
+    volumes:
+      - ./config.yml:/app/config.yml
   db:
     image: mongo:4.0-xenial
     volumes:
