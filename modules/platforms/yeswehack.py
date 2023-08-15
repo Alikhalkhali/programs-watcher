@@ -1,5 +1,5 @@
 import json
-from modules.platforms.functions import find_program, generate_program_key, get_resource, remove_elements, save_data, check_program_type
+from modules.platforms.functions import find_program, generate_program_key, get_resource, remove_elements, save_data, check_send_notification
 from modules.notifier.discord import send_notification
 
 
@@ -7,6 +7,7 @@ from modules.notifier.discord import send_notification
 def check_yeswehack(tmp_dir, mUrl, first_time, db, config):
     json_programs_key = []
     notifications = config['notifications']
+    monitor = config['monitor']
     get_resource(tmp_dir, config['url'], "yeswehack")
     yeswehack = open(f"{tmp_dir}yeswehack.json")
     yeswehack = json.load(yeswehack)
@@ -51,41 +52,38 @@ def check_yeswehack(tmp_dir, mUrl, first_time, db, config):
         data["removeInScope"] = []
         data["newInScope"] = []
         hasChanged = False
-        send_notifi = False
+        is_update = False
         if newInScope:
             watcherData["inScope"].extend(newInScope)
             notifi_status = notifications['new_inscope']
             if notifi_status:
                 data["newInScope"] = newInScope
-                send_notifi = True
+                is_update = True
             hasChanged = True
         if removeInScope:
             remove_elements(watcherData["inScope"], removeInScope)
             notifi_status = notifications['removed_inscope']
             if notifi_status:
                 data["removeInScope"] = removeInScope
-                send_notifi = True
+                is_update = True
             hasChanged = True
         if dataJson['reward'] != watcherData['reward']:
             watcherData["reward"] = dataJson['reward']
             notifi_status = notifications['new_bounty_table']
             if notifi_status:
                 data["reward"] = dataJson['reward']
-                send_notifi = True
+                is_update = True
             hasChanged = True
         if dataJson["programType"] != watcherData["programType"]:
             notifi_status = notifications['new_type']
             if notifi_status:
                 data["newType"] = dataJson["programType"]
-                send_notifi = True
+                is_update = True
             watcherData["programType"] = dataJson["programType"]
             hasChanged = True
         if hasChanged:
             save_data(db, "yeswehack", programKey, watcherData)
-            if check_program_type(data,watcherData,notifications):
-                if not first_time and data['isNewProgram'] and notifications['new_program']:
-                    send_notification(data, mUrl)
-                elif not first_time and send_notifi and not data['isNewProgram']:
+            if check_send_notification(first_time, is_update, data,watcherData, monitor, notifications):
                     send_notification(data, mUrl)
 
     db_programs_key = db['yeswehack'].distinct("programKey")

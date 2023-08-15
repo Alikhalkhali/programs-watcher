@@ -135,6 +135,8 @@ def send_startup_message(webhook_url):
                          description= "Hi, welcome to ** Programs Watcher **! 🎉\nThe program has started successfully and is now waiting for a change. 🗼✨\n** Github page: ** https://github.com/Alikhalkhali/programs-watcher", color="23ff1f")
     embed.set_footer(text='Powered by Ali Khalkhali',
                      icon_url='https://cdn.discordapp.com/avatars/941457826662985808/488f3bcab0de041de57860b4e05e2e9f.webp')
+    embed.add_embed_field(name=" ", value= "[Click here to Buy me a coffee ☕](https://www.buymeacoffee.com/alikhalkhali)", inline=False)
+
     webhook.add_embed(embed)
     response = webhook.execute()
 

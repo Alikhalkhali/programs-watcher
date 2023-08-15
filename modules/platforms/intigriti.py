@@ -1,5 +1,5 @@
 import json
-from modules.platforms.functions import find_program, generate_program_key, get_resource, save_data, check_program_type
+from modules.platforms.functions import find_program, generate_program_key, get_resource, save_data, check_send_notification
 from modules.notifier.discord import send_notification
 
 
@@ -7,6 +7,7 @@ from modules.notifier.discord import send_notification
 def check_intigriti(tmp_dir, mUrl, first_time, db, config):
     json_programs_key = []
     notifications = config['notifications']
+    monitor = config['monitor']
     get_resource(tmp_dir, config['url'], "intigriti")
     intigriti = open(f"{tmp_dir}intigriti.json")
     intigriti = json.load(intigriti)
@@ -60,13 +61,13 @@ def check_intigriti(tmp_dir, mUrl, first_time, db, config):
         data["newProgramType"] = []
         data["newReward"] = []
         hasChanged = False
-        send_notifi = False
+        is_update = False
         if newScope:
             notifi_status = notifications['new_scope']
             for i in newScope:
                 if notifi_status:
                     data["newScope"].append(dataJson["scope"][i])
-                    send_notifi = True
+                    is_update = True
                 watcherData["scope"][i] = dataJson["scope"][i]
             hasChanged = True
         if removedScope:
@@ -74,21 +75,21 @@ def check_intigriti(tmp_dir, mUrl, first_time, db, config):
             for i in removedScope:
                 if notifi_status:
                     data["removedScope"].append(watcherData["scope"][i])
-                    send_notifi = True
+                    is_update = True
                 del watcherData["scope"][i]
             hasChanged = True
         if dataJson["programType"] != watcherData["programType"]:
             notifi_status = notifications['new_type']
             if notifi_status:
                 data["newProgramType"] = dataJson["programType"]
-                send_notifi = True
+                is_update = True
             watcherData["programType"] = dataJson["programType"]
             hasChanged = True
         if dataJson["reward"] != watcherData["reward"]:
             notifi_status = notifications['new_bounty_table']
             if notifi_status:
                 data["newReward"] = dataJson["reward"]
-                send_notifi = True
+                is_update = True
             watcherData["reward"] = dataJson["reward"]
             hasChanged = True
 
@@ -101,17 +102,13 @@ def check_intigriti(tmp_dir, mUrl, first_time, db, config):
                         "old": watcherData["scope"][id],
                     }
                     data["changedScope"].append(scope)
-                    send_notifi = True
+                    is_update = True
                 watcherData["scope"][id] = dataJson["scope"][id]
                 hasChanged = True
         if hasChanged:
             save_data(db, "intigriti", programKey, watcherData)
-            if check_program_type(data,watcherData, notifications):
-                if not first_time and data['isNewProgram'] and notifications['new_program']:
+            if check_send_notification(first_time, is_update, data,watcherData, monitor, notifications):
                     send_notification(data, mUrl)
-                elif not first_time and send_notifi and not data['isNewProgram']:
-                    send_notification(data, mUrl)
-
     db_programs_key = db['intigriti'].distinct("programKey")
     removed_programs_key = set(db_programs_key) - set(json_programs_key)
     for program_key in removed_programs_key:

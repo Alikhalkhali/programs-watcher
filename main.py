@@ -17,7 +17,8 @@ platforms = {}
 for platform in cfg['platforms']:
     platforms[platform['name']] = {
         'url': platform['url'],
-        'notifications': platform['notifications']
+        'notifications': platform['notifications'],
+        'monitor': platform['monitor']
     }
 
 # connect to MongoDB

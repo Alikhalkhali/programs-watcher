@@ -1,5 +1,5 @@
 import json
-from modules.platforms.functions import find_program, generate_program_key, get_resource, remove_elements, save_data, check_program_type
+from modules.platforms.functions import find_program, generate_program_key, get_resource, remove_elements, save_data, check_send_notification
 from modules.notifier.discord import send_notification
 
 
@@ -7,6 +7,7 @@ from modules.notifier.discord import send_notification
 def check_bugcrowd(tmp_dir, mUrl, first_time, db, config):
     json_programs_key = []
     notifications = config['notifications']
+    monitor = config['monitor']
     get_resource(tmp_dir, config['url'], "bugcrowd")
     bugcrowdFile = open(f"{tmp_dir}bugcrowd.json")
     bugcrowd = json.load(bugcrowdFile)
@@ -55,55 +56,52 @@ def check_bugcrowd(tmp_dir, mUrl, first_time, db, config):
         newOutOfScope = [i for i in dataJson["outOfScope"]
                          if i not in watcherData["outOfScope"]]
         hasChanged = False
-        send_notifi = False
+        is_update = False
         if newInScope:
             watcherData["inScope"].extend(newInScope)
             notifi_status = notifications['new_inscope']
             hasChanged = True
             if notifi_status:
                 data["newInScope"] = newInScope
-                send_notifi = True
+                is_update = True
         if removeInScope:
             remove_elements(watcherData["inScope"], removeInScope)
             hasChanged = True
             notifi_status = notifications['removed_inscope']
             if notifi_status:
                 data["removeInScope"] = removeInScope
-                send_notifi = True
+                is_update = True
         if newOutOfScope:
             watcherData["outOfScope"].extend(newOutOfScope)
             hasChanged = True
             notifi_status = notifications['new_out_of_scope']
             if notifi_status:
                 data["newOutOfScope"] = newOutOfScope
-                send_notifi = True
+                is_update = True
         if removedOutOfScope:
             remove_elements(watcherData["outOfScope"], removedOutOfScope)
             hasChanged = True
             notifi_status = notifications['removed_out_of_scope']
             if notifi_status:
                 data["removeOutOfScope"] = removedOutOfScope
-                send_notifi = True
+                is_update = True
         if dataJson["programType"] != watcherData["programType"]:
             watcherData["programType"] = dataJson["programType"]
             hasChanged = True
             notifi_status = notifications['new_type']
             if notifi_status:
                 data["newType"] = dataJson["programType"]
-                send_notifi = True
+                is_update = True
         if dataJson["reward"] != watcherData["reward"]:
             watcherData["reward"] = bounty
             hasChanged = True
             notifi_status = notifications['new_bounty_table']
             if notifi_status:
                 data["reward"] = bounty
-                send_notifi = True
+                is_update = True
         if hasChanged:
             save_data(db, "bugcrowd", programKey, watcherData)
-            if check_program_type(data,watcherData,notifications):
-                if not first_time and data['isNewProgram'] and notifications['new_program']:
-                    send_notification(data, mUrl)
-                elif not first_time and send_notifi and not data['isNewProgram']:
+            if check_send_notification(first_time, is_update, data,watcherData, monitor, notifications):
                     send_notification(data, mUrl)
         
     db_programs_key = db['bugcrowd'].distinct("programKey")

@@ -27,18 +27,25 @@ def save_data(db, platformName, programKey, dataJson):
     db[platformName].update_one({'programKey': programKey}, {
         '$set': dataJson}, upsert=True)
 
-def check_program_type(data,watcherData,notifications):
+def check_send_notification(first_time,is_update,data,watcherData,monitor,notifications):
     pt_notify_status = False
+    notify_status = False
     if data['isNewProgram']:
-        
-        if data['programType'] == "rdp" and notifications['watch_rdp']:
+        if data['programType'] == "rdp" and monitor['rdp']:
             pt_notify_status = True
-        elif data['programType'] == "vdp" and notifications["watch_vdp"]: 
+        elif data['programType'] == "vdp" and monitor["vdp"]: 
             pt_notify_status = True
     else:
-        if watcherData['programType'] == "rdp" and notifications['watch_rdp']:
+        if watcherData['programType'] == "rdp" and monitor['rdp']:
             pt_notify_status = True
-        elif watcherData['programType'] == "vdp" and notifications["watch_vdp"]: 
+        elif watcherData['programType'] == "vdp" and monitor["vdp"]: 
             pt_notify_status = True   
-    return pt_notify_status  
+    if watcherData['programURL'] in monitor['specific_programs']:
+            pt_notify_status = True
+    if pt_notify_status:
+        if not first_time and data['isNewProgram'] and notifications['new_program']:
+            notify_status = True
+        elif not first_time and is_update and not data['isNewProgram']:
+            notify_status = True
+    return notify_status  
     
