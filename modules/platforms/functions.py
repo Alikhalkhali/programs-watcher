@@ -47,5 +47,8 @@ def check_send_notification(first_time,is_update,data,watcherData,monitor,notifi
             notify_status = True
         elif not first_time and is_update and not data['isNewProgram']:
             notify_status = True
+    if watcherData['programURL'] in monitor['excluded_programs']:
+        print(watcherData['programURL'])
+        notify_status = False 
     return notify_status  
     

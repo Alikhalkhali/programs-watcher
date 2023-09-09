@@ -26,7 +26,10 @@ platforms:
       rdp: true
       vdp: true
       specific_programs: []
-      excluded_programs: []
+      excluded_programs: 
+        - https://hackerone.com/alshaya?type=team
+        - https://hackerone.com/gsa_vdp?type=team
+        - https://hackerone.com/clarivate?type=team
     notifications:
       new_program: true
       removed_program: true
@@ -40,7 +43,7 @@ platforms:
       rdp: true
       vdp: true
       specific_programs: []
-      excluded_programs: []
+      excluded_programs: [] 
     notifications:
       new_program: true
       removed_program: true
