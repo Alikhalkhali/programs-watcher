@@ -11,7 +11,11 @@
   
 # Programs Watcher
 Programs Watcher is a Python program that monitors and notifies you of new updates from various bug bounty platforms. It uses MongoDB for data storage and Discord webhooks for notifications.
+<br>
+<br>
+## Youtube Video
 
+[![Video Thumbnail](https://github.com/Alikhalkhali/programs-watcher/blob/main/img/Thumbnail.jpg)](https://www.youtube.com/watch?v=V6d6_YVUSR8)
 # Installation
 
 To install Programs Watcher, follow these steps:
@@ -58,6 +62,7 @@ Specify the monitoring options for the platform.
 
 - `rdp`: Set to true if you want to monitor RDP programs.
 - `vdp`: Set to true if you want to monitor VDP programs.
+- `excluded_programs`: List the URLs of the programs you wish to exclude from monitoring. Please note that this applies only to public programs.
 - `specific_programs`:  List the specific program URLs you want to monitor. Note that it only monitors public programs. For example:
   - bugcrowd:
     ```yml
