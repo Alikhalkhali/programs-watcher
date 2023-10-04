@@ -18,9 +18,12 @@ Programs Watcher is a Python program that monitors and notifies you of new updat
 [![Video Thumbnail](https://github.com/Alikhalkhali/programs-watcher/blob/main/img/Thumbnail.jpg)](https://www.youtube.com/watch?v=V6d6_YVUSR8)
 # Installation
 
-To install Programs Watcher, follow these steps:
+To install Programs Watcher, you have two options depending on your needs.
+
+## Option 1: Docker Installation (Recommended for server environments)
 
 1. Clone the repository to your local machine:
+
 ```bash
 git clone https://github.com/Alikhalkhali/programs-watcher.git
 ```
@@ -33,6 +36,36 @@ cd programs-watcher
  ```bash
 docker-compose up -d
 ```
+## Option 2: Manual Installation (Recommended for desktop and laptop usage)
+
+This option is suitable for users who want to run Programs Watcher on their local machines and manually trigger updates and notifications.
+
+1. Install MongoDB:
+   - Download and install MongoDB from the official website: [MongoDB Download](https://www.mongodb.com/try/download/community)
+   - Follow the installation instructions for your operating system.
+
+2. Clone the repository to your local machine:
+‍‍‍
+```bash
+git clone https://github.com/Alikhalkhali/programs-watcher.git
+```
+
+3. Change directory to the project folder:
+```bash
+cd programs-watcher
+```
+4. In the `config.yml` file, replace `<YOUR DISCORD WEBHOOK>` with your Discord webhook URL and update the MongoDB connection URL to `mongodb://localhost:27017/`.
+
+5. Install the required dependencies:
+```bash
+pip3 install -r requirements.txt
+```
+6. Run the program:
+```bash
+python3 main.py
+```
+
+Remember to manually run the program whenever you want to check for updates and receive notifications. This option is recommended for desktop and laptop installations.
 
 # Configuring Programs Watcher
 
