@@ -13,8 +13,8 @@ def check_intigriti(tmp_dir, mUrl, first_time, db, config):
     intigriti = json.load(intigriti)
     for program in intigriti:
         programName = program["name"]
-        logo = f"https://api.intigriti.com/file/api/file/{program['logoId']}"
-        programURL = f"https://app.intigriti.com/programs/{program['companyHandle']}/{program['handle']}"
+        logo = "https://app.intigriti.com/api/file/api/file/public_bucket_4a9183d2-6b19-42a2-bdba-ca189c2c8cf3-7524e932-f18b-463c-92d2-28c8e9c12ed9"
+        programURL = f"https://app.intigriti.com/researcher" + program["webLinks"]["detail"].split("redirect=")[1]
         data = {"programName": programName, "programType": "", "programURL": programURL,
                 "logo": logo, "platformName": "Intigriti","isRemoved": False, "isNewProgram": False, "color": 10858237}
         dataJson = {"programName": programName,
@@ -27,13 +27,16 @@ def check_intigriti(tmp_dir, mUrl, first_time, db, config):
             data["isNewProgram"] = True
             watcherData = {"programName": programName,
                            "programURL": programURL, "programType": "", "scope": {}, "reward": {}}
+        if 'domains' in program:
 
-        for target in program['domains']:
-            if target['description'] is not None:
-                dataJson['scope'][target['id']
-                                  ] = f"{target['endpoint']}\n{target['description']}\n"
-            else:
-                dataJson['scope'][target['id']] = f"{target['endpoint']}\n"
+            for target in program['domains']:
+                if target['description'] is not None:
+                    dataJson['scope'][target['id']
+                                      ] = f"{target['endpoint']}\n{target['description']}\n"
+                else:
+                    dataJson['scope'][target['id']] = f"{target['endpoint']}\n"
+        else:
+            pass;
         # checking vdp or rdp
         if program["maxBounty"]["value"] > 0:
             dataJson["programType"] = "rdp"
@@ -53,11 +56,11 @@ def check_intigriti(tmp_dir, mUrl, first_time, db, config):
         scopeId = {prop for prop in dataJson["scope"]}
         dbScopeId = {prop for prop in watcherData["scope"]}
         newScope = scopeId - dbScopeId
-        removedScope = dbScopeId - scopeId
+        #removedScope = dbScopeId - scopeId
         scopeId = scopeId - newScope
         data["newScope"] = []
         data["changedScope"] = []
-        data["removedScope"] = []
+        #data["removedScope"] = []
         data["newProgramType"] = []
         data["newReward"] = []
         hasChanged = False
@@ -70,14 +73,14 @@ def check_intigriti(tmp_dir, mUrl, first_time, db, config):
                     is_update = True
                 watcherData["scope"][i] = dataJson["scope"][i]
             hasChanged = True
-        if removedScope:
-            notifi_status = notifications['removed_scope']
-            for i in removedScope:
-                if notifi_status:
-                    data["removedScope"].append(watcherData["scope"][i])
-                    is_update = True
-                del watcherData["scope"][i]
-            hasChanged = True
+        #if removedScope:
+        #    notifi_status = notifications['removed_scope']
+        #    for i in removedScope:
+        #        if notifi_status:
+        #            data["removedScope"].append(watcherData["scope"][i])
+        #            is_update = True
+        #        del watcherData["scope"][i]
+        #    hasChanged = True
         if dataJson["programType"] != watcherData["programType"]:
             notifi_status = notifications['new_type']
             if notifi_status:

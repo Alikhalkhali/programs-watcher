@@ -2,7 +2,6 @@ import json
 from modules.platforms.functions import find_program, generate_program_key, get_resource, remove_elements, save_data, check_send_notification
 from modules.notifier.discord import send_notification
 
-
 # checking bugcrowd
 def check_bugcrowd(tmp_dir, mUrl, first_time, db, config):
     json_programs_key = []
@@ -14,37 +13,50 @@ def check_bugcrowd(tmp_dir, mUrl, first_time, db, config):
     bugcrowdFile.close()
     for program in bugcrowd:
         programName = program["name"]
-        programURL = "https://bugcrowd.com"+program["program_url"]
-        logo = program["logo"]
-        data = {"programName": programName, "reward": {},"isRemoved": False, "newType": "", "newInScope": [], "removeInScope": [], "newOutOfScope": [], "removeOutOfScope": [], "programURL": programURL,
+        programURL = "https://bugcrowd.com" + program["briefUrl"]
+        logo = program["logoUrl"]
+        data = {"programName": programName, "reward": {}, "isRemoved": False, "newType": "", "newInScope": [], "removeInScope": [], "newOutOfScope": [], "removeOutOfScope": [], "programURL": programURL,
                 "logo": logo, "platformName": "Bugcrowd", "isNewProgram": False, "color": 14584064}
-        dataJson = {"programName": programName, "programURL": programURL, "programType": "",
-                    "outOfScope": [], "inScope": [], "reward": {}}
+        dataJson = {"programName": programName, "programURL": programURL, "programType": "", "outOfScope": [], "inScope": [], "reward": {}}
         programKey = generate_program_key(programName, programURL)
         json_programs_key.append(programKey)
         watcherData = find_program(db, 'bugcrowd', programKey)
         if watcherData is None:
             data["isNewProgram"] = True
-            watcherData = {"programKey": programKey, "programName": programName, "programURL": programURL, "programType": "",
-                           "outOfScope": [], "inScope": [], "reward": {}}
+            watcherData = {"programKey": programKey, "programName": programName, "programURL": programURL, "programType": "", "outOfScope": [], "inScope": [], "reward": {}}
         for target in program["target_groups"]:
             if target["in_scope"] == False:
                 for item in target["targets"]:
                     dataJson["outOfScope"].append(item["name"])
-
             else:
                 for item in target["targets"]:
                     dataJson["inScope"].append((item["name"]))
-
-            if program["min_rewards"] > 0:
-                dataJson["programType"] = "rdp"
-                data["programType"] = "rdp"
+            if "rewardSummary" in program and program["rewardSummary"]:
+                min_reward = program["rewardSummary"]["minReward"]
+                max_reward = program["rewardSummary"]["maxReward"]
+                # Check if at least one reward is in money format
+                is_money_format = min_reward.startswith('$') or max_reward.startswith('$')
+            if is_money_format:
+                    dataJson["programType"] = "rdp"
+                    data["programType"] = "rdp"
             else:
                 dataJson["programType"] = "vdp"
                 data["programType"] = "vdp"
+            if is_money_format:
+                if min_reward == "Points":
+                    min_reward = 0 ;
+            else:
+                min_reward = int(min_reward.replace('$', '').replace(',', ''))
+            if isinstance(max_reward, str):
+                max_reward = int(max_reward.replace('$', '').replace(',', ''))
+        else:
+            dataJson["programType"] = "noun"
+            data["programType"] = "noun"
+            min_reward = 0
+            max_reward = 0
             bounty = {
-                "min": program["min_rewards"],
-                "max": program["max_rewards"]
+                "min": min_reward,
+                "max": max_reward
             }
             dataJson["reward"] = bounty
         newInScope = [i for i in dataJson["inScope"]
@@ -118,4 +130,4 @@ def check_bugcrowd(tmp_dir, mUrl, first_time, db, config):
         }
         if notifications['removed_program'] and not first_time:
             send_notification(data,mUrl)
-        db['bugcrowd'].delete_many({"programKey": program_key})        
+        db['bugcrowd'].delete_many({"programKey": program_key})
