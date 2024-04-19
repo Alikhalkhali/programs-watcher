@@ -34,9 +34,6 @@ def check_intigriti(tmp_dir, mUrl, first_time, db, config):
                                     ] = f"{target['endpoint']}\n{target['description']}\n"
                 else:
                     dataJson['scope'][target['id']] = f"{target['endpoint']}\n"
-        else: 
-            print(programName)
-        # checking vdp or rdp
         if program["maxBounty"]["value"] > 0:
             dataJson["programType"] = "rdp"
             bounty = {
