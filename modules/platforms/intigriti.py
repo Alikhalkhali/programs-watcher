@@ -13,8 +13,8 @@ def check_intigriti(tmp_dir, mUrl, first_time, db, config):
     intigriti = json.load(intigriti)
     for program in intigriti:
         programName = program["name"]
-        logo = f"https://api.intigriti.com/file/api/file/{program['logoId']}"
-        programURL = f"https://app.intigriti.com/programs/{program['companyHandle']}/{program['handle']}"
+        logo = "https://secure.gravatar.com/avatar/8609b9cc1f1333c3632b2afdc8607f4d?s=500&d=identicon&r=g"
+        programURL = f"https://app.intigriti.com/{program['webLinks']['detail']}"
         data = {"programName": programName, "programType": "", "programURL": programURL,
                 "logo": logo, "platformName": "Intigriti","isRemoved": False, "isNewProgram": False, "color": 10858237}
         dataJson = {"programName": programName,
@@ -27,13 +27,15 @@ def check_intigriti(tmp_dir, mUrl, first_time, db, config):
             data["isNewProgram"] = True
             watcherData = {"programName": programName,
                            "programURL": programURL, "programType": "", "scope": {}, "reward": {}}
-
-        for target in program['domains']:
-            if target['description'] is not None:
-                dataJson['scope'][target['id']
-                                  ] = f"{target['endpoint']}\n{target['description']}\n"
-            else:
-                dataJson['scope'][target['id']] = f"{target['endpoint']}\n"
+        if "domains" in program:
+            for target in program['domains']:
+                if target['description'] is not None:
+                    dataJson['scope'][target['id']
+                                    ] = f"{target['endpoint']}\n{target['description']}\n"
+                else:
+                    dataJson['scope'][target['id']] = f"{target['endpoint']}\n"
+        else: 
+            print(programName)
         # checking vdp or rdp
         if program["maxBounty"]["value"] > 0:
             dataJson["programType"] = "rdp"

@@ -14,8 +14,8 @@ def check_bugcrowd(tmp_dir, mUrl, first_time, db, config):
     bugcrowdFile.close()
     for program in bugcrowd:
         programName = program["name"]
-        programURL = "https://bugcrowd.com"+program["program_url"]
-        logo = program["logo"]
+        programURL = "https://bugcrowd.com"+program["briefUrl"]
+        logo = program["logoUrl"]
         data = {"programName": programName, "reward": {},"isRemoved": False, "newType": "", "newInScope": [], "removeInScope": [], "newOutOfScope": [], "removeOutOfScope": [], "programURL": programURL,
                 "logo": logo, "platformName": "Bugcrowd", "isNewProgram": False, "color": 14584064}
         dataJson = {"programName": programName, "programURL": programURL, "programType": "",
@@ -35,17 +35,18 @@ def check_bugcrowd(tmp_dir, mUrl, first_time, db, config):
             else:
                 for item in target["targets"]:
                     dataJson["inScope"].append((item["name"]))
-
-            if program["min_rewards"] > 0:
+            bounty = {
+                "min": "",
+                "max": ""
+            }
+            if "rewardSummary" in program and program["rewardSummary"] != None:
                 dataJson["programType"] = "rdp"
                 data["programType"] = "rdp"
+                bounty["max"] = program["rewardSummary"]["maxReward"]
+                bounty["min"] = program["rewardSummary"]["minReward"]
             else:
                 dataJson["programType"] = "vdp"
                 data["programType"] = "vdp"
-            bounty = {
-                "min": program["min_rewards"],
-                "max": program["max_rewards"]
-            }
             dataJson["reward"] = bounty
         newInScope = [i for i in dataJson["inScope"]
                       if i not in watcherData["inScope"]]
